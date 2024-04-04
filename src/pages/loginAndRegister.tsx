@@ -1,11 +1,11 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SignUpPage from "../components/signup";
 import LoginPage from "../components/login";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { status } = useParams(); // Get the status parameter from the URL
+  // const { status } = useParams(); // Get the status parameter from the URL
 
   const handleLoginClick = () => {
     navigate("/loginAndRegister?status=login"); // Navigate to login page

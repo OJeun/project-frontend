@@ -8,6 +8,7 @@ const SignUpPage = () => {
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true); // State variable for password match validation
+  const [isEmailValid, setIsEmailValid] = useState(true); // State variable for email validation
   //   const baseURL = "http://localhost:8888";
   //   const navigate = useNavigate();
 
@@ -22,15 +23,9 @@ const SignUpPage = () => {
   //     console.log(response.data);
   //   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      setPasswordsMatch(false);
-      return; // Stop form submission if passwords do not match
-    }
-    // Proceed with form submission if passwords match
-    console.log("Form submitted");
+  const validateEmail = () => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsEmailValid(regex.test(email));
   };
 
   return (
@@ -63,13 +58,22 @@ const SignUpPage = () => {
             <input
               type="email"
               name="email"
-              className="form-control"
+              className={`form-control ${!isEmailValid && "is-invalid"}`}
               id="email"
               placeholder="jane@doe.ca"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                const { value } = e.target;
+                setEmail(value);
+                validateEmail();
+              }}
               required
             />
+            {!isEmailValid && (
+              <div className="invalid-feedback">
+                Please enter a valid email address
+              </div>
+            )}
           </div>
           <div className="mb-3">
             <label htmlFor="password" className="form-label">
@@ -97,6 +101,7 @@ const SignUpPage = () => {
               id="confirm_password"
               placeholder="******"
               onChange={(e) => {
+                console.log(confirmPassword);
                 setConfirmPassword(e.target.value);
                 setPasswordsMatch(e.target.value === password); // Check if passwords match on input change
               }}
