@@ -6,6 +6,8 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordsMatch, setPasswordsMatch] = useState(true); // State variable for password match validation
   //   const baseURL = "http://localhost:8888";
   //   const navigate = useNavigate();
 
@@ -19,6 +21,17 @@ const SignUpPage = () => {
   //     navigate("Login", { state: { message: response.data.message } });
   //     console.log(response.data);
   //   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setPasswordsMatch(false);
+      return; // Stop form submission if passwords do not match
+    }
+    // Proceed with form submission if passwords match
+    console.log("Form submitted");
+  };
 
   return (
     <section>
@@ -80,11 +93,18 @@ const SignUpPage = () => {
             <input
               type="password"
               name="password_confirmation"
-              className="form-control"
+              className={`form-control ${!passwordsMatch && "is-invalid"}`}
               id="confirm_password"
               placeholder="******"
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                setPasswordsMatch(e.target.value === password); // Check if passwords match on input change
+              }}
               required
             />
+            {!passwordsMatch && (
+              <div className="invalid-feedback">Passwords do not match</div>
+            )}
           </div>
           <button className="btn btn-primary">Submit</button>
         </div>
