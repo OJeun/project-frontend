@@ -1,19 +1,27 @@
 import { useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 
 const Login = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  console.log(apiUrl);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //   const baseURL = "http://localhost:8888";
 
-  //   const handleLogin = async () => {
-  //     const response = await axios.post(`${baseURL}/api/login`, {
-  //       email,
-  //       password,
-  //     });
-  //     console.log(response.data);
-  //     localStorage.setItem("token", response.data.authorisation.token);
-  //   };
+  const handleLogin = async () => {
+    const response = await axios.post(apiUrl + "/api/login", {
+      email,
+      password,
+    });
+    if (response.data.error) {
+      window.location.href =
+        "/loginAndRegister?status=login&message=" +
+        response.data.error +
+        "&error=true";
+      return;
+    }
+    console.log(response.data);
+    localStorage.setItem("token", response.data.authorisation.token);
+  };
   return (
     <section>
       <form className="justify-content-center">
@@ -50,7 +58,9 @@ const Login = () => {
               required
             ></input>
           </div>
-          <button className="btn btn-primary">Submit</button>
+          <button onClick={handleLogin} className="btn btn-primary">
+            Submit
+          </button>
         </div>
       </form>
     </section>

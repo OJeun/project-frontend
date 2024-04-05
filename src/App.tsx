@@ -4,13 +4,13 @@
 import "./../public/bootstrap.css";
 import "./App.css";
 import { Outlet } from "react-router";
+import AlertComponent from "./components/AlertComponent";
 
 function App() {
   return (
     <>
-      <div>
-        <Outlet />
-      </div>
+      <AlertComponent />
+      <Outlet />
     </>
   );
 }
