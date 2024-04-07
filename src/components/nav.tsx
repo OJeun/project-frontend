@@ -42,13 +42,13 @@ const Nav = () => {
               </li>
               {authToken ? (
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <a className="nav-link" href="/">
                     Profile
                   </a>
                 </li>
               ) : (
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <a className="nav-link" href="/loginAndRegister">
                     Login
                   </a>
                 </li>
