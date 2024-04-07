@@ -7,7 +7,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log(email, password);
     const response = await axios.post(apiUrl + "/api/login", {
       email,
       password,
@@ -20,11 +22,14 @@ const Login = () => {
       return;
     }
     console.log(response.data);
+    console.log(response.data.authorisation.token);
     localStorage.setItem("token", response.data.authorisation.token);
+    window.location.href = "/";
+
   };
   return (
     <section>
-      <form className="justify-content-center">
+      <form className="justify-content-center" onSubmit={handleLogin}>
         <div className="p-3 m-5" style={{ minHeight: "25rem" }}>
           <h1 className="text-center mb-5">Login</h1>
 
