@@ -61,10 +61,20 @@ const Home = () => {
         return;
       }
 
-      const response = await axios.post(apiUrl + "/api/recommendation", {
-        type_id: selectedType,
-        uploaded_image: imageBase64,
+      const axiosInstance = axios.create({
+        timeout: 15000, // Set timeout to 10 seconds (10000 milliseconds)
+        headers: {
+          "Content-Type": "application/json", // Set content type to JSON
+        },
       });
+
+      const response = await axiosInstance.post(
+        apiUrl + "/api/recommendation",
+        {
+          type_id: selectedType,
+          uploaded_image: imageBase64,
+        }
+      );
 
       console.log("Recommendation response:", response.data);
 
