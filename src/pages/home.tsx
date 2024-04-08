@@ -5,25 +5,23 @@ import axios from "axios";
 
 const Home = () => {
   const [imageBase64, setImageBase64] = useState<string | null>(null);
-  const [clothTypes, setClothTypes] = useState<string[]>([]);
+  const [clothTypes, setClothTypes] = useState<{ id: number; type: string }[]>(
+    []
+  );
   const [selectedType, setSelectedType] = useState<string>("");
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     fetchClothTypes();
-  });
+  }, []);
 
   const fetchClothTypes = async () => {
     try {
       const response = await axios.get(apiUrl + "/api/types"); // Adjust the endpoint URL as per your backend route
       console.log(response.data);
       if (Array.isArray(response.data)) {
-        const types = [];
-        for (let i = 0; i < response.data.length; i++) {
-          types.push(response.data[i].type);
-        }
-        setClothTypes(types);
-        setSelectedType(types[0]);
+        setClothTypes(response.data);
+        setSelectedType(response.data[0].id.toString());
       }
     } catch (error) {
       console.log("Error fetching cloth types:", error);
@@ -37,7 +35,6 @@ const Home = () => {
 
     reader.onload = () => {
       const base64 = reader.result;
-      console.log(base64);
       setImageBase64(base64 as string);
     };
 
@@ -52,8 +49,29 @@ const Home = () => {
     setSelectedType(e.target.value);
   };
 
-  const handleGenerate = () => {
-    // Implement generation logic here
+  const handleGenerate = async () => {
+    try {
+      const JsonData = {
+        type_id: selectedType,
+        uploaded_image: imageBase64,
+      };
+      console.log(JsonData);
+      if (!imageBase64) {
+        console.log("Please upload an image first.");
+        return;
+      }
+
+      const response = await axios.post(apiUrl + "/api/recommendation", {
+        type_id: selectedType,
+        uploaded_image: imageBase64,
+      });
+
+      console.log("Recommendation response:", response.data);
+
+      // Further logic based on recommendation response
+    } catch (error) {
+      console.log("Error generating recommendation:", error);
+    }
   };
 
   return (
@@ -109,11 +127,13 @@ const Home = () => {
                 <select
                   className="btn btn-secondary dropdown-toggle"
                   aria-label="Select cloth type"
-                  defaultValue={selectedType}
+                  value={selectedType}
                   onChange={handleTypeChange}
                 >
-                  {clothTypes.map((type) => (
-                    <option value={type}>{type}</option>
+                  {clothTypes.map(({ id, type }) => (
+                    <option key={id} value={id.toString()}>
+                      {type}
+                    </option>
                   ))}
                 </select>
               </div>
