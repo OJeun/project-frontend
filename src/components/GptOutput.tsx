@@ -1,49 +1,52 @@
 import { BsCheckCircle } from "react-icons/bs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import RecommendationData from "../models/Recommendation";
 
-const GptOutput = ( {requestInfo } ) => {
+const GptOutput = ({ requestInfo }: { requestInfo: RecommendationData }) => {
+  console.log(requestInfo);
   const [isLoading, setIsLoading] = useState(false);
   const [isResponseGenerated, setIsResponseGenerated] = useState(false);
 
-  setIsLoading(true);
-  setIsResponseGenerated(false);
+  useEffect(() => {
+    // Set isLoading to true when requestInfo changes
+    setIsLoading(true);
+    // Reset isResponseGenerated when requestInfo changes
+    setIsResponseGenerated(false);
+  }, [requestInfo]);
 
   return (
     <div>
-      <div className="d-flex">
-        <h3>output:</h3>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         {isLoading && (
-          <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
+          <div
+            className="spinner-border text-primary text-center"
+            role="status"
+            style={{
+              width: "8rem",
+              height: "8rem",
+            }}
+          ></div>
         )}
         {isResponseGenerated && !isLoading && (
-          <div className="text-success">
-            <BsCheckCircle size={20} />
-            <span className="ml-2">Response Generated</span>
+          <div>
+            <div className="text-success">
+              <BsCheckCircle size={20} />
+              <span className="ml-2">Response Generated</span>
+            </div>
           </div>
         )}
       </div>
       <div className="row">
-        <div className="col-md-4">
-          <div className="card">
-            <img
-              src="/path/to/your/image.jpg"
-              alt="Product"
-              className="card-img-top"
-            />
-            <div className="card-body">
-              <h5 className="card-title">Product Name</h5>
-              <p className="card-text">Product Description</p>
-              <a href="#" className="btn btn-primary">
-                Buy Now
-              </a>
-            </div>
-          </div>
-        </div>
+        <div className="col-md-4"></div>
       </div>
     </div>
   );
 };
 
-export default GptOutput; 
+export default GptOutput;
