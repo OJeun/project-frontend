@@ -24,7 +24,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchClothTypes();
-    test();
+    // test();
   }, []); // empty dependency array ensures fetchClothTypes is only called once
 
   const fetchClothTypes = async () => {
@@ -40,22 +40,22 @@ const Home = () => {
     }
   };
 
-  const test = () => {
-    setRecommendationData({
-      description: "text text",
-      id: 1,
-      item: new Item(
-        1,
-        "Light Blue Hoodie",
-        "Jordan",
-        "Light Blue",
-        "Top",
-        "Light blue hoodie with front pocket and drawstrings, featuring the Jordan logo on the chest.",
-        "clothing_images/tops/light_blue_hoodie.png"
-      ), // 修复这里的分号为逗号
-    });
-    setIsLoading(false); // Set loading state to false (response received)
-  };
+  // const test = () => {
+  //   setRecommendationData({
+  //     description: "text text",
+  //     id: 1,
+  //     item: new Item(
+  //       1,
+  //       "Light Blue Hoodie",
+  //       "Jordan",
+  //       "Light Blue",
+  //       "Top",
+  //       "Light blue hoodie with front pocket and drawstrings, featuring the Jordan logo on the chest.",
+  //       "clothing_images/tops/light_blue_hoodie.png"
+  //     ), // 修复这里的分号为逗号
+  //   });
+  //   setIsLoading(false); // Set loading state to false (response received)
+  // };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -133,8 +133,6 @@ const Home = () => {
           console.log("Error fetching clothing detail:", itemData);
           return;
         }
-
-        const type: string = getTypeStringById(itemData.data.type_id) ?? "";
 
         setRecommendationData({
           description: response.data.description,

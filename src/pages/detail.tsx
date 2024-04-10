@@ -3,6 +3,7 @@ import { BsFillHeartFill } from "react-icons/bs";
 import Item from "../models/Item";
 import axios from "axios";
 import Nav from "../components/nav";
+import axiosInstance from "../components/axiosInstance";
 
 console.log(localStorage.getItem("token"));
 
@@ -24,7 +25,7 @@ const ItemDetail = () => {
 
   const fetchItemDetails = async () => {
     try {
-      const response = await axios.get(apiUrl + `/api/clothing/${id}`, {
+      const response = await axiosInstance.get(apiUrl + `/api/clothing/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -51,7 +52,7 @@ const ItemDetail = () => {
 
   const toggleLike = async () => {
     if (isLiked) {
-      const response = await axios.delete(
+      const response = await axiosInstance.delete(
         apiUrl + `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
         {
           headers: {
@@ -61,17 +62,17 @@ const ItemDetail = () => {
       );
       console.log(response.data);
     } else {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         apiUrl + `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
         {
           headers: {
-            Authorization: `${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      setIsLiked(!isLiked); // Toggle the like state
       console.log(response.data);
     }
+    setIsLiked(!isLiked);
   };
 
   if (!item) {

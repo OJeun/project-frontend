@@ -31,6 +31,10 @@ const GptOutput = ({
             className="text-success"
             style={{
               textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <BsCheckCircle size={40} className="m-4" />

@@ -46,26 +46,6 @@ const UserProfile = () => {
     }
   };
 
-  const handleDeleteItem = async (itemId: number) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(
-        apiUrl + `/users/${localStorage.getItem("userId")}/favorites/${itemId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      // Remove the deleted item from the userItems state
-      setSavedItems((prevItems) =>
-        prevItems.filter((item) => item.id !== itemId)
-      );
-    } catch (error) {
-      console.error("Error deleting item:", error);
-    }
-  };
-
   return (
     <section>
       <Nav />
@@ -82,14 +62,7 @@ const UserProfile = () => {
             savedItems.map((item) => (
               <div key={item.id} className="col-md-4 mb-3">
                 <ItemCard data={item} />
-                <div className="text-right mt-2">
-                  <button
-                    className="btn btn-outline-danger"
-                    onClick={() => handleDeleteItem(item.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
+                <div className="text-right mt-2"></div>
               </div>
             ))
           )}
