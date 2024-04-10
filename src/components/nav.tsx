@@ -5,11 +5,21 @@ const Nav = () => {
 
   useEffect(() => {
     // Check if authToken exists in localStorage
-    const authTokenFromStorage = localStorage.getItem("authToken");
+    const authTokenFromStorage = localStorage.getItem("token");
     if (authTokenFromStorage) {
       setAuthToken(authTokenFromStorage);
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    setAuthToken("");
+    window.location.href =
+      "/loginAndRegister?status=login&message=" +
+      "log out successful" +
+      "&error=false";
+  };
 
   return (
     <>
@@ -55,7 +65,13 @@ const Nav = () => {
               )}
               {authToken && (
                 <li className="nav-item pull-left">
-                  <a className="nav-link" href="#">
+                  <a
+                    className="nav-link"
+                    onClick={handleLogout}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
                     Logout
                   </a>
                 </li>

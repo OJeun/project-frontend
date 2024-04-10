@@ -13,23 +13,22 @@ const SignUpPage = () => {
 
   const handleRegister = async () => {
     console.log(apiUrl);
-    const response = await axios.post("http://localhost:8888/api/register", {
+    const response = await axios.post(apiUrl + "/api/register", {
       name,
       email,
       password,
     });
     // Redirect to /login with message parameter
-    // if (response.data.error) {
-    //   window.location.href =
-    //     "/loginAndRegister?status=signup&message=" +
-    //     response.data.error +
-    //     "&error=true";
-    //   return;
-    // }
-    // window.location.href =
-    //   "/loginAndRegister?status=login&message=Account created successfully. Please login." +
-    //   "&error=false";
-    console.log(response.data);
+    if (response.status !== 200) {
+      window.location.href =
+        "/loginAndRegister?status=signup&message=" +
+        response.data.error +
+        "&error=true";
+      return;
+    }
+    window.location.href =
+      "/loginAndRegister?status=login&message=Account created successfully. Please login." +
+      "&error=false";
   };
 
   const validateEmail = () => {

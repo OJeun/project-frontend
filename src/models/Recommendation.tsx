@@ -1,8 +1,12 @@
+import Item from "./Item";
+
 export default class RecommendationData {
   description: string;
-  recommended_item_image: string;
-  constructor(description: string, recommended_item_image: string) {
+  id: number;
+  item: Item;
+  constructor(description: string, id: number, item: Item) {
     this.description = description;
-    this.recommended_item_image = recommended_item_image;
+    this.id = id;
+    this.item = item;
   }
 }

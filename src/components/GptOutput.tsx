@@ -1,50 +1,49 @@
 import { BsCheckCircle } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import RecommendationData from "../models/Recommendation";
+import "animate.css";
+import ItemCard from "./ItemCard";
 
-const GptOutput = ({ requestInfo }: { requestInfo: RecommendationData }) => {
-  console.log(requestInfo);
-  const [isLoading, setIsLoading] = useState(false);
+const GptOutput = ({
+  requestInfo,
+  isLoading,
+}: {
+  requestInfo: RecommendationData;
+  isLoading: boolean;
+}) => {
+  // const [loading, setLoading] = useState(false);
+  // const [itemData, setItemData] = useState(null);
   const [isResponseGenerated, setIsResponseGenerated] = useState(false);
 
   useEffect(() => {
-    // Set isLoading to true when requestInfo changes
-    setIsLoading(true);
-    // Reset isResponseGenerated when requestInfo changes
-    setIsResponseGenerated(false);
-  }, [requestInfo]);
+    if (requestInfo) {
+      setIsResponseGenerated(true);
+    } else {
+      setIsResponseGenerated(false);
+    }
+  }, [requestInfo, isLoading]);
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {isLoading && (
+      {isResponseGenerated && !isLoading && (
+        <div>
           <div
-            className="spinner-border text-primary text-center"
-            role="status"
+            className="text-success"
             style={{
-              width: "8rem",
-              height: "8rem",
+              textAlign: "center",
             }}
-          ></div>
-        )}
-        {isResponseGenerated && !isLoading && (
-          <div>
-            <div className="text-success">
-              <BsCheckCircle size={20} />
-              <span className="ml-2">Response Generated</span>
+          >
+            <BsCheckCircle size={40} className="m-4" />
+            <div
+              className="animate__animated animate__fadeIn"
+              style={{ marginBottom: "2rem" }}
+            >
+              <text>Description: {requestInfo?.description} </text>
             </div>
+            <ItemCard data={requestInfo.item} />
           </div>
-        )}
-      </div>
-      <div className="row">
-        <div className="col-md-4"></div>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

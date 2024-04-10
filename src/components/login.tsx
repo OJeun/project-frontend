@@ -14,18 +14,18 @@ const Login = () => {
       email,
       password,
     });
-    if (response.data.error) {
+    if (response.status !== 200) {
       window.location.href =
         "/loginAndRegister?status=login&message=" +
-        response.data.error +
+        response.data.message +
         "&error=true";
       return;
     }
     console.log(response.data);
     console.log(response.data.authorisation.token);
     localStorage.setItem("token", response.data.authorisation.token);
+    localStorage.setItem("userId", JSON.stringify(response.data.user.id));
     window.location.href = "/";
-
   };
   return (
     <section>

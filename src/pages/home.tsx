@@ -5,14 +5,18 @@ import axios from "axios";
 import GptOutput from "../components/GptOutput";
 import RecommendationData from "../models/Recommendation";
 import { Modal, Button } from "react-bootstrap";
+import Item from "../models/Item";
 // import "animate.css";
 
 const Home = () => {
+  console.log(localStorage.getItem("token"));
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [clothTypes, setClothTypes] = useState<{ id: number; type: string }[]>(
     []
   );
+  // const [item, setItem] = useState<Item>(new Item(0, "", "", "", "", "", "")); // State to hold item data
   const [selectedType, setSelectedType] = useState<string>("");
   const apiUrl = import.meta.env.VITE_API_URL;
   const [recommendationData, setRecommendationData] =
@@ -20,19 +24,37 @@ const Home = () => {
 
   useEffect(() => {
     fetchClothTypes();
+    test();
   }, []); // empty dependency array ensures fetchClothTypes is only called once
 
   const fetchClothTypes = async () => {
     try {
-      const response = await axios.get(apiUrl + "/api/types"); // Adjust the endpoint URL as per your backend route
-      console.log(response.data);
+      const response = await axios.get(apiUrl + "/api/types");
       if (Array.isArray(response.data)) {
         setClothTypes(response.data);
         setSelectedType(response.data[0].id.toString());
       }
     } catch (error) {
-      console.log("Error fetching cloth types:", error);
+      location.href =
+        "/?message= Error fetching cloth types: " + error + "&error=true";
     }
+  };
+
+  const test = () => {
+    setRecommendationData({
+      description: "text text",
+      id: 1,
+      item: new Item(
+        1,
+        "Light Blue Hoodie",
+        "Jordan",
+        "Light Blue",
+        "Top",
+        "Light blue hoodie with front pocket and drawstrings, featuring the Jordan logo on the chest.",
+        "clothing_images/tops/light_blue_hoodie.png"
+      ), // 修复这里的分号为逗号
+    });
+    setIsLoading(false); // Set loading state to false (response received)
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -52,56 +74,93 @@ const Home = () => {
     e.preventDefault();
   };
 
+  const getTypeStringById = (id: number) => {
+    if (clothTypes) {
+      const type = clothTypes.find(
+        (type: { id: number; type: string }) => type.id === id
+      );
+      return type ? type.type : "";
+    }
+  };
+
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(e.target.value);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setRecommendationData(null);
   };
 
   const handleGenerate = async () => {
-    setRecommendationData({
-      description:
-        "The light blue hoodie would match the first image's denim skirt because the casual style of the hoodie complements the casual look of the denim skirt. Additionally, the light blue color would pair well with the blue denim.",
-      recommended_item_image:
-        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.threadsmagazine.com%2F2009%2F01%2F02%2Funderstand-turn-of-cloth-2&psig=AOvVaw2Ts5_c52tV3TDb77a_frc1&ust=1712777764168000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOjHo8TwtYUDFQAAAAAdAAAAABAE",
-    });
     setShowModal(true);
-    try {
-      const JsonData = {
-        type_id: selectedType,
-        uploaded_image: imageBase64,
-      };
-      console.log(JsonData);
-      if (!imageBase64) {
-        console.log("Please upload an image first.");
-        return;
-      }
+    //do not delete!!!
+    // try {
+    //   if (!imageBase64) {
+    //     console.log("Please upload an image first.");
+    //     return;
+    //   }
 
-      const axiosInstance = axios.create({
-        timeout: 15000, // Set timeout to 10 seconds (10000 milliseconds)
-        headers: {
-          "Content-Type": "application/json", // Set content type to JSON
-        },
-      });
+    //   const axiosInstance = axios.create({
+    //     timeout: 15000, // Set timeout to 10 seconds (10000 milliseconds)
+    //     headers: {
+    //       "Content-Type": "application/json", // Set content type to JSON
+    //     },
+    //   });
 
-      const response = await axiosInstance.post(
-        apiUrl + "/api/recommendation",
-        {
-          type_id: selectedType,
-          uploaded_image: imageBase64,
-        }
-      );
+    //   const response = await axiosInstance.post(
+    //     apiUrl + "/api/recommendation",
+    //     {
+    //       type_id: selectedType,
+    //       uploaded_image: imageBase64,
+    //     }
+    //   );
 
-      setRecommendationData(response.data); // Store recommendation response in state
+    //   try {
+    //     const itemData = await axios.get(
+    //       apiUrl + `/api/clothing/${response.data.id}`,
+    //       {
+    //         headers: {
+    //           Authorization: `${localStorage.getItem("token")}`,
+    //         },
+    //       }
+    //     ); // Add closing parenthesis here
 
-      console.log("Recommendation response:", response.data);
+    //     console.log("Item data:", itemData.data);
 
-      // Further logic based on recommendation response
-    } catch (error) {
-      console.log("Error generating recommendation:", error);
-    }
+    //     if (itemData.status !== 200) {
+    //       console.log("Error fetching clothing detail:", itemData);
+    //       return;
+    //     }
+
+    //     const type: string = getTypeStringById(itemData.data.type_id) ?? "";
+
+    //     setRecommendationData({
+    //       description: response.data.description,
+    //       id: response.data.id,
+    //       item: new Item(
+    //         itemData.data.id,
+    //         itemData.data.name,
+    //         itemData.data.brand,
+    //         itemData.data.colour,
+    //         type,
+    //         itemData.data.description,
+    //         itemData.data.image_path
+    //       ), // 修复这里的分号为逗号
+    //     });
+    //     setIsLoading(false); // Set loading state to false (response received)
+
+    //     console.log("Recommendation response:", response.data);
+    //   } catch (error) {
+    //     console.error("Error fetching clothing detail:", error);
+    //   }
+
+    //   // Further logic based on recommendation response
+    // } catch (error) {
+    //   console.log(error);
+    //   // location.href =
+    //   //   "/?message= Error generating recommendation: " + error + "&error=true";
+    // }
   };
 
   return (
@@ -209,7 +268,32 @@ const Home = () => {
           <Modal.Title>Recommendation Output</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {recommendationData && <GptOutput requestInfo={recommendationData} />}
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {isLoading && (
+                <div
+                  className="spinner-border text-primary text-center"
+                  role="status"
+                  style={{
+                    width: "8rem",
+                    height: "8rem",
+                  }}
+                ></div>
+              )}
+              {recommendationData && (
+                <GptOutput
+                  requestInfo={recommendationData}
+                  isLoading={isLoading}
+                />
+              )}
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
