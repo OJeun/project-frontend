@@ -37,7 +37,7 @@ const ItemDetail = () => {
           response.data.name,
           response.data.brand,
           response.data.colour,
-          "type",
+          response.data.type,
           response.data.description,
           response.data.image_path,
           response.data.isFavorite
