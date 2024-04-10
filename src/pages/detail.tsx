@@ -4,6 +4,8 @@ import Item from "../models/Item";
 import axios from "axios";
 import Nav from "../components/nav";
 
+console.log(localStorage.getItem("token"));
+
 const ItemDetail = () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -24,7 +26,7 @@ const ItemDetail = () => {
     try {
       const response = await axios.get(apiUrl + `/api/clothing/${id}`, {
         headers: {
-          Authorization: `${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -36,17 +38,40 @@ const ItemDetail = () => {
           response.data.colour,
           "type",
           response.data.description,
-          response.data.image_path
+          response.data.image_path,
+          response.data.isFavorite
         )
       );
+      setIsLiked(response.data.isFavorite);
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching item details:", error);
     }
   };
 
-  const toggleLike = () => {
-    setIsLiked(!isLiked); // Toggle the like state
+  const toggleLike = async () => {
+    if (isLiked) {
+      const response = await axios.delete(
+        apiUrl + `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(response.data);
+    } else {
+      const response = await axios.post(
+        apiUrl + `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setIsLiked(!isLiked); // Toggle the like state
+      console.log(response.data);
+    }
   };
 
   if (!item) {

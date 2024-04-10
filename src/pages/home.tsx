@@ -94,73 +94,74 @@ const Home = () => {
 
   const handleGenerate = async () => {
     setShowModal(true);
-    //do not delete!!!
-    // try {
-    //   if (!imageBase64) {
-    //     console.log("Please upload an image first.");
-    //     return;
-    //   }
+    // do not delete!!!
+    try {
+      if (!imageBase64) {
+        console.log("Please upload an image first.");
+        return;
+      }
 
-    //   const axiosInstance = axios.create({
-    //     timeout: 15000, // Set timeout to 10 seconds (10000 milliseconds)
-    //     headers: {
-    //       "Content-Type": "application/json", // Set content type to JSON
-    //     },
-    //   });
+      const axiosInstance = axios.create({
+        timeout: 20000, // Set timeout to 10 seconds (10000 milliseconds)
+        headers: {
+          "Content-Type": "application/json", // Set content type to JSON
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-    //   const response = await axiosInstance.post(
-    //     apiUrl + "/api/recommendation",
-    //     {
-    //       type_id: selectedType,
-    //       uploaded_image: imageBase64,
-    //     }
-    //   );
+      const response = await axiosInstance.post(
+        apiUrl + "/api/recommendation",
+        {
+          type_id: selectedType,
+          uploaded_image: imageBase64,
+        }
+      );
 
-    //   try {
-    //     const itemData = await axios.get(
-    //       apiUrl + `/api/clothing/${response.data.id}`,
-    //       {
-    //         headers: {
-    //           Authorization: `${localStorage.getItem("token")}`,
-    //         },
-    //       }
-    //     ); // Add closing parenthesis here
+      try {
+        const itemData = await axios.get(
+          apiUrl + `/api/clothing/${response.data.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        ); // Add closing parenthesis here
 
-    //     console.log("Item data:", itemData.data);
+        console.log("Item data:", itemData.data);
 
-    //     if (itemData.status !== 200) {
-    //       console.log("Error fetching clothing detail:", itemData);
-    //       return;
-    //     }
+        if (itemData.status !== 200) {
+          console.log("Error fetching clothing detail:", itemData);
+          return;
+        }
 
-    //     const type: string = getTypeStringById(itemData.data.type_id) ?? "";
+        const type: string = getTypeStringById(itemData.data.type_id) ?? "";
 
-    //     setRecommendationData({
-    //       description: response.data.description,
-    //       id: response.data.id,
-    //       item: new Item(
-    //         itemData.data.id,
-    //         itemData.data.name,
-    //         itemData.data.brand,
-    //         itemData.data.colour,
-    //         type,
-    //         itemData.data.description,
-    //         itemData.data.image_path
-    //       ), // 修复这里的分号为逗号
-    //     });
-    //     setIsLoading(false); // Set loading state to false (response received)
+        setRecommendationData({
+          description: response.data.description,
+          id: response.data.id,
+          item: new Item(
+            itemData.data.id,
+            itemData.data.name,
+            itemData.data.brand,
+            itemData.data.colour,
+            itemData.data.type,
+            itemData.data.description,
+            itemData.data.image_path
+          ), // 修复这里的分号为逗号
+        });
+        setIsLoading(false); // Set loading state to false (response received)
 
-    //     console.log("Recommendation response:", response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching clothing detail:", error);
-    //   }
+        console.log("Recommendation response:", response.data);
+      } catch (error) {
+        console.error("Error fetching clothing detail:", error);
+      }
 
-    //   // Further logic based on recommendation response
-    // } catch (error) {
-    //   console.log(error);
-    //   // location.href =
-    //   //   "/?message= Error generating recommendation: " + error + "&error=true";
-    // }
+      // Further logic based on recommendation response
+    } catch (error) {
+      console.log(error);
+      // location.href =
+      //   "/?message= Error generating recommendation: " + error + "&error=true";
+    }
   };
 
   return (

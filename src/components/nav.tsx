@@ -14,6 +14,8 @@ const Nav = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+    localStorage.removeItem("name");
     setAuthToken("");
     window.location.href =
       "/loginAndRegister?status=login&message=" +
@@ -45,14 +47,14 @@ const Nav = () => {
           <div className="collapse navbar-collapse" id="navbarColor01">
             <ul className="navbar-nav me-auto">
               <li className="nav-item">
-                <a className="nav-link active" href="#">
+                <a className="nav-link" href="/">
                   Home
                   <span className="visually-hidden">(current)</span>
                 </a>
               </li>
               {authToken ? (
                 <li className="nav-item">
-                  <a className="nav-link" href="/">
+                  <a className="nav-link" href="/profile">
                     Profile
                   </a>
                 </li>

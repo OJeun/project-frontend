@@ -1,3 +1,5 @@
+import { FaBullseye } from "react-icons/fa";
+
 export default class Item {
   id: number;
   name: string;
@@ -6,6 +8,7 @@ export default class Item {
   type: string;
   description: string;
   imagePath: string;
+  isFavorite: boolean = false;
   constructor(
     id: number,
     name: string,
@@ -13,7 +16,8 @@ export default class Item {
     colour: string,
     type: string,
     description: string,
-    imagePath: string
+    imagePath: string,
+    isFavorite: boolean = false
   ) {
     this.id = id;
     this.name = name;
@@ -23,5 +27,6 @@ export default class Item {
     this.description = description;
     const apiUrl = import.meta.env.VITE_API_URL;
     this.imagePath = apiUrl + "/" + imagePath;
+    this.isFavorite = isFavorite;
   }
 }
