@@ -225,26 +225,7 @@ const Home = () => {
                   ))}
                 </select>
               </div>
-              <div>
-                <text
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                    marginRight: "20px",
-                  }}
-                >
-                  Select item number:
-                </text>
-                <select
-                  className="btn btn-secondary dropdown-toggle"
-                  aria-label="Select item number"
-                >
-                  <option value="1" selected>
-                    One
-                  </option>
-                  <option value="2">Two</option>
-                </select>
-              </div>
+              <div></div>
             </div>
           </div>
           <button
