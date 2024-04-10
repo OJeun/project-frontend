@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Nav from "../components/nav";
 import axios from "axios";
-import { BsTrash } from "react-icons/bs";
 import ItemCard from "../components/ItemCard";
 import Item from "../models/Item";
 

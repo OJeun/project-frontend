@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { BsFillHeartFill } from "react-icons/bs";
 import Item from "../models/Item";
-import axios from "axios";
 import Nav from "../components/nav";
 import axiosInstance from "../components/axiosInstance";
 

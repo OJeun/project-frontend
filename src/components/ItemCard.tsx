@@ -1,12 +1,9 @@
-import { BsFillHeartFill, BsInfoCircle } from "react-icons/bs";
-import { useState } from "react";
+import { BsInfoCircle } from "react-icons/bs";
 import Item from "../models/Item";
 
 const ItemCard = ({ data }: { data: Item }) => {
   const { name, brand, type, imagePath, id } = data;
-  const [isLiked, setIsLiked] = useState(false);
 
-  const heartColor = isLiked ? "red" : "grey"; // Dynamic heart color
 
   const handleDetailsClick = () => {
     // Navigate to the detail page with the item ID

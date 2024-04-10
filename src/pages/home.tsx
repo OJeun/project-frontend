@@ -74,14 +74,14 @@ const Home = () => {
     e.preventDefault();
   };
 
-  const getTypeStringById = (id: number) => {
-    if (clothTypes) {
-      const type = clothTypes.find(
-        (type: { id: number; type: string }) => type.id === id
-      );
-      return type ? type.type : "";
-    }
-  };
+  // const getTypeStringById = (id: number) => {
+  //   if (clothTypes) {
+  //     const type = clothTypes.find(
+  //       (type: { id: number; type: string }) => type.id === id
+  //     );
+  //     return type ? type.type : "";
+  //   }
+  // };
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(e.target.value);

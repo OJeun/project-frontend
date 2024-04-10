@@ -6,5 +6,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig({
+  server: {
+    // Specify MIME types for file extensions
+  },
   plugins: [react()],
 });

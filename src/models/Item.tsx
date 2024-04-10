@@ -1,4 +1,3 @@
-import { FaBullseye } from "react-icons/fa";
 
 export default class Item {
   id: number;
