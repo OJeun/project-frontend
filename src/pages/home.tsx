@@ -72,6 +72,11 @@ const Home = () => {
     }
 
     if (file && validImageTypes.includes(file.type)) {
+      if (file.size > 25 * 1024) {
+        // Check if file size is greater than 25KB
+        toast.warning("File size exceeds 25KB. Please upload a smaller image.");
+        return;
+      }
       const reader = new FileReader();
 
       reader.onload = () => {
@@ -221,7 +226,10 @@ const Home = () => {
             <BsArrowRepeat />
           </div>
           {!imageBase64 ? (
-            <p>Drag & Drop your file here</p>
+            <p style={{ textAlign: "center" }}>
+              Drag & Drop your file here
+              <br /> Image need to be smaller than 25KB
+            </p>
           ) : (
             <img
               src={imageBase64}
