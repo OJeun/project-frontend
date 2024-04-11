@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Nav from "../components/nav";
-import { BsCheckCircle } from "react-icons/bs";
 import axios from "axios";
 import GptOutput from "../components/GptOutput";
 import RecommendationData from "../models/Recommendation";
@@ -8,6 +7,7 @@ import { Modal, Button } from "react-bootstrap";
 import Item from "../models/Item";
 // import "animate.css";
 import { toast } from "react-toastify";
+import { BsArrowRepeat } from "react-icons/bs";
 
 console.log(localStorage.getItem("token"));
 
@@ -69,6 +69,7 @@ const Home = () => {
     };
 
     reader.readAsDataURL(file);
+    toast.success("Image uploaded successfully!");
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -93,12 +94,16 @@ const Home = () => {
     setRecommendationData(null);
   };
 
+  const handleDeleteImage = () => {
+    setImageBase64(null);
+  };
+
   const handleGenerate = async () => {
-    if (!localStorage.getItem('token')) {
-      toast.warning('Login needed. Redirecting to login page...');
+    if (!localStorage.getItem("token")) {
+      toast.warning("Login needed. Redirecting to login page...");
 
       setTimeout(() => {
-        location.href = '/loginAndRegister';
+        location.href = "/loginAndRegister";
       }, 3000); // Wait for 3 seconds before redirecting
       return;
     }
@@ -185,23 +190,30 @@ const Home = () => {
             alignItems: "center",
             justifyContent: "center",
             border: "2px dashed #ccc",
+            position: "relative", // Add position relative to set delete button position
           }}
         >
-          <p>Drag & Drop your file here</p>
-        </div>
-        {imageBase64 && (
-          <div className="text-center mt-3">
+          <div
+            className="btn delete-button"
+            onClick={handleDeleteImage}
+            style={{
+              position: "absolute", // Set position absolute to overlay delete button
+              top: "10px", // Adjust top position as needed
+              right: "10px", // Adjust right position as needed
+            }}
+          >
+            <BsArrowRepeat />
+          </div>
+          {!imageBase64 ? (
+            <p>Drag & Drop your file here</p>
+          ) : (
             <img
               src={imageBase64}
               alt="Uploaded"
-              style={{ maxWidth: "100%", maxHeight: "15rem" }}
+              style={{ maxWidth: "100%", maxHeight: "100%" }}
             />
-            <div className="text-success d-flex justify-content-left align-items-center mt-2">
-              <BsCheckCircle size={20} />
-              <p className="ml-2">File uploaded successfully!</p>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
         <div className="container p-5">
           <div className="container">
             <div className="d-flex justify-content-between mb-5">
@@ -245,7 +257,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Bootstrap Modal */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Recommendation Output</Modal.Title>
