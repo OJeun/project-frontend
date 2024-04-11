@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 const Nav = () => {
   const [authToken, setAuthToken] = useState("");
+  const [isNavOpen, setIsNavOpen] = useState(false); // State to control navbar collapse
 
   useEffect(() => {
     // Check if authToken exists in localStorage
@@ -36,16 +37,17 @@ const Nav = () => {
           <button
             className="navbar-toggler"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarColor01"
-            aria-controls="navbarColor01"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+            onClick={() => setIsNavOpen(!isNavOpen)} // Toggle navbar collapse state
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarColor01">
-            <ul className="navbar-nav me-auto">
+          <div
+            className={`collapse navbar-collapse ${isNavOpen ? "show" : ""}`}
+            id="navbarColor01"
+          >
+            <ul className="navbar-nav ms-auto">
+              {" "}
+              {/* Change me-auto to ms-auto for right alignment */}
               <li className="nav-item">
                 <a className="nav-link" href="/">
                   Home
@@ -66,7 +68,7 @@ const Nav = () => {
                 </li>
               )}
               {authToken && (
-                <li className="nav-item pull-left">
+                <li className="nav-item">
                   <a
                     className="nav-link"
                     onClick={handleLogout}
