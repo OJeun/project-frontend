@@ -24,12 +24,12 @@ const ItemDetail = () => {
   }, [id]); // Call the effect whenever the id changes
 
   const fetchItemDetails = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      toast.warning('Login needed. Redirecting to login page...');
+      toast.warning("Login needed. Redirecting to login page...");
 
       setTimeout(() => {
-        location.href = '/loginAndRegister';
+        location.href = "/loginAndRegister";
       }, 3000);
       return;
     }
@@ -60,38 +60,44 @@ const ItemDetail = () => {
   };
 
   const toggleLike = async () => {
-    if (isLiked) {
-      const response = await axiosInstance.delete(
-        apiUrl + `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+    try {
+      if (isLiked) {
+        const response = await axiosInstance.delete(
+          apiUrl +
+            `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.status !== 200) {
+          toast.error(response.data.message);
+          return;
+        } else {
+          toast.success("Item removed from favorites.");
         }
-      );
-      if (response.status !== 200) {
-        toast.error(response.data.message);
-        return;
       } else {
-        toast.success("Item removed from favorites.");
-      }
-    } else {
-      const response = await axiosInstance.post(
-        apiUrl + `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+        const response = await axiosInstance.post(
+          apiUrl +
+            `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.status !== 200) {
+          toast.error(response.data.message);
+          return;
+        } else {
+          toast.success("Item added to favorites.");
         }
-      );
-      if (response.status !== 200) {
-        toast.error(response.data.message);
-        return;
-      } else {
-        toast.success("Item added to favorites.");
       }
+      setIsLiked(!isLiked);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
-    setIsLiked(!isLiked);
   };
 
   if (!item) {

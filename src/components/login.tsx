@@ -26,7 +26,9 @@ const Login = () => {
       localStorage.setItem("name", response.data.user.name);
       window.location.href = "/";
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(
+        `${error.response.data.message}. Please double check email and password.`
+      );
     }
   };
   return (
