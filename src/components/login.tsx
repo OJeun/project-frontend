@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -10,24 +11,23 @@ const Login = () => {
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log(email, password);
-    const response = await axios.post(apiUrl + "/api/login", {
-      email,
-      password,
-    });
-    if (response.status !== 200) {
-      window.location.href =
-        "/loginAndRegister?status=login&message=" +
-        response.data.message +
-        "&error=true";
-      return;
+    try {
+      const response = await axios.post(apiUrl + "/api/login", {
+        email,
+        password,
+      });
+      if (response.status !== 200) {
+        toast.error(response.data.message);
+        return;
+      }
+      localStorage.setItem("token", response.data.authorisation.token);
+      localStorage.setItem("userId", JSON.stringify(response.data.user.id));
+      localStorage.setItem("email", response.data.user.email);
+      localStorage.setItem("name", response.data.user.name);
+      window.location.href = "/";
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
-    console.log(response.data);
-    console.log(response.data.authorisation.token);
-    localStorage.setItem("token", response.data.authorisation.token);
-    localStorage.setItem("userId", JSON.stringify(response.data.user.id));
-    localStorage.setItem("email", response.data.user.email);
-    localStorage.setItem("name", response.data.user.name);
-    window.location.href = "/";
   };
   return (
     <section>

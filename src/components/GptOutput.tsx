@@ -42,7 +42,7 @@ const GptOutput = ({
               className="animate__animated animate__fadeIn"
               style={{ marginBottom: "2rem" }}
             >
-              <text>Description: {requestInfo?.description} </text>
+              <span>Description: {requestInfo?.description} </span>
             </div>
             <ItemCard data={requestInfo.item} />
           </div>

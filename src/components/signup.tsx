@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
@@ -9,26 +10,26 @@ const SignUpPage = () => {
   const [passwordsMatch, setPasswordsMatch] = useState(true); // State variable for password match validation
   const [isEmailValid, setIsEmailValid] = useState(true); // State variable for email validation
   const apiUrl = import.meta.env.VITE_API_URL.toString();
-  console.log(apiUrl);
 
   const handleRegister = async () => {
-    console.log(apiUrl);
-    const response = await axios.post(apiUrl + "/api/register", {
-      name,
-      email,
-      password,
-    });
-    // Redirect to /login with message parameter
-    if (response.status !== 200) {
-      window.location.href =
-        "/loginAndRegister?status=signup&message=" +
-        response.data.error +
-        "&error=true";
+    if (password.length < 6) {
+      // Display an error message or handle the validation as per your UI requirements
+      toast.error("Password must be at least 6 characters long.");
       return;
     }
-    window.location.href =
-      "/loginAndRegister?status=login&message=Account created successfully. Please login." +
-      "&error=false";
+    try {
+      await axios.post(apiUrl + "/api/register", {
+        name,
+        email,
+        password,
+      });
+
+      window.location.href =
+        "/loginAndRegister?status=login&message=Account created successfully. Please login." +
+        "&error=false";
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
   };
 
   const validateEmail = () => {

@@ -30,15 +30,14 @@ const Home = () => {
   }, []); // empty dependency array ensures fetchClothTypes is only called once
 
   const fetchClothTypes = async () => {
-    const response = await axios.get(apiUrl + "/api/types");
-    if (Array.isArray(response.data)) {
-      setClothTypes(response.data);
-      setSelectedType(response.data[0].id.toString());
-    }
-
-    if (response.status !== 200) {
-      toast.error(`${response.data.error}: ${response.data.message}`);
-      return;
+    try {
+      const response = await axios.get(apiUrl + "/api/types");
+      if (Array.isArray(response.data)) {
+        setClothTypes(response.data);
+        setSelectedType(response.data[0].id.toString());
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -110,47 +109,51 @@ const Home = () => {
         },
       });
 
-      const response = await axiosInstance.post(
-        apiUrl + "/api/recommendation",
-        {
-          type_id: selectedType,
-          uploaded_image: imageBase64,
+      try {
+        const response = await axiosInstance.post(
+          apiUrl + "/api/recommendation",
+          {
+            type_id: selectedType,
+            uploaded_image: imageBase64,
+          }
+        );
+
+        if (response.status !== 200) {
+          toast.error(response.data.message);
+          return;
         }
-      );
 
-      if (response.status !== 200) {
-        toast.error(`${response.data.error}: ${response.data.message}`);
-        return;
-      }
+        const itemData = await axios.get(
+          apiUrl + `/api/clothing/${response.data.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        ); // Add closing parenthesis here
 
-      const itemData = await axios.get(
-        apiUrl + `/api/clothing/${response.data.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+        if (itemData.status !== 200) {
+          toast.error(response.data.message);
+          return;
         }
-      ); // Add closing parenthesis here
 
-      if (itemData.status !== 200) {
-        toast.error("Error fetching clothing detail:", itemData.data.error);
-        return;
+        setRecommendationData({
+          description: response.data.description,
+          id: response.data.id,
+          item: new Item(
+            itemData.data.id,
+            itemData.data.name,
+            itemData.data.brand,
+            itemData.data.colour,
+            itemData.data.type,
+            itemData.data.description,
+            itemData.data.image_path
+          ), // 修复这里的分号为逗号
+        });
+        setIsLoading(false); // Set loading state to false (response received)
+      } catch (error: any) {
+        toast.error(error.response.data.message);
       }
-
-      setRecommendationData({
-        description: response.data.description,
-        id: response.data.id,
-        item: new Item(
-          itemData.data.id,
-          itemData.data.name,
-          itemData.data.brand,
-          itemData.data.colour,
-          itemData.data.type,
-          itemData.data.description,
-          itemData.data.image_path
-        ), // 修复这里的分号为逗号
-      });
-      setIsLoading(false); // Set loading state to false (response received)
     }
   };
 

@@ -31,7 +31,7 @@ const ItemDetail = () => {
     });
 
     if (response.status !== 200) {
-      toast.error(`${response.data.error}: ${response.data.message}`);
+      toast.error(response.data.message);
       return;
     }
 
@@ -61,8 +61,10 @@ const ItemDetail = () => {
         }
       );
       if (response.status !== 200) {
-        toast.error(`${response.data.error}: ${response.data.message}`);
+        toast.error(response.data.message);
         return;
+      } else {
+        toast.success("Item removed from favorites.");
       }
     } else {
       const response = await axiosInstance.post(
@@ -73,6 +75,12 @@ const ItemDetail = () => {
           },
         }
       );
+      if (response.status !== 200) {
+        toast.error(response.data.message);
+        return;
+      } else {
+        toast.success("Item added to favorites.");
+      }
     }
     setIsLiked(!isLiked);
   };

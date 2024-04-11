@@ -1,21 +1,15 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AlertComponent = () => {
   const [message, setMessage] = useState("");
-  const [classN, setclassN] = useState("");
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     // Function to get message from URL parameters
     const getMessageFromURL = () => {
       const params = new URLSearchParams(window.location.search);
-      const warning = params.get("error");
-      if (warning == "true") {
-        setclassN("alert alert-danger alert-dismissible fade");
-      } else {
-        setclassN("alert alert-success alert-dismissible fade");
-      }
-
       return params.get("message") || ""; // Get message parameter from URL, or empty string if not found
     };
 
@@ -27,35 +21,23 @@ const AlertComponent = () => {
     setIsVisible(false);
   };
 
-  return (
-    <>
-      <div className="d-flex justify-content-center" style={{ width: "100%" }}>
-        {isVisible && message && (
-          <div
-            className={classN}
-            role="alert"
-            style={{
-              position: "absolute",
-              minWidth: "30rem",
-              top: "12rem",
-              zIndex: "9999",
-              opacity: isVisible ? 1 : 0,
-              transition: "opacity 2s ease-in-out",
-            }}
-          >
-            <strong>{message}</strong>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-              onClick={handleClose}
-            ></button>
-          </div>
-        )}
-      </div>
-    </>
-  );
+  useEffect(() => {
+    if (message) {
+      const params = new URLSearchParams(window.location.search);
+      const isError = params.get("error") === "true";
+      const type = isError ? "error" : "success";
+
+      if (isVisible) {
+        if (message.trim() !== "") {
+          toast[type](message, {
+            onClose: handleClose,
+          });
+        }
+      }
+    }
+  }, [message, isVisible]);
+
+  return null; // This component doesn't render any UI directly, it utilizes toast notifications
 };
 
 export default AlertComponent;

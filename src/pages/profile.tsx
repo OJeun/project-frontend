@@ -3,6 +3,7 @@ import Nav from "../components/nav";
 import axios from "axios";
 import ItemCard from "../components/ItemCard";
 import Item from "../models/Item";
+import { toast } from "react-toastify";
 
 const UserProfile = () => {
   const [savedItems, setSavedItems] = useState<Item[]>([]);
@@ -25,7 +26,11 @@ const UserProfile = () => {
           },
         }
       );
-      console.log(response.data);
+      if (response.status !== 200) {
+        toast.error(response.data.message);
+        return;
+      }
+
       setSavedItems(
         response.data.map(
           (item: any) =>
@@ -40,8 +45,8 @@ const UserProfile = () => {
             )
         )
       );
-    } catch (error) {
-      console.error("Error fetching saved items:", error);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
 
