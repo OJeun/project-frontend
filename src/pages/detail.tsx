@@ -131,22 +131,34 @@ const ItemDetail = () => {
             <img src={item.imagePath} className="img-fluid" />
           </div>
           <div className="col-md-6">
-            <h2>{item.name}</h2>
-            <p>Brand: {item.brand}</p>
-            <p>Type: {item.type}</p>
-            <p>Colour: {item.colour}</p>
-            <p>Description: {item.description}</p>
+            <h2 style={{ marginBottom: '15px' }}>{item.name}</h2>
+            <p>
+              <strong>Brand</strong>: {item.brand}
+            </p>
+            <p>
+              <strong>Type</strong>: {item.type}
+            </p>
+            <p>
+              <strong>Colour</strong>: {item.colour}
+            </p>
+            <p>
+              <strong>Description</strong>: {item.description}
+            </p>
+            <a href="/profile" className="btn btn-outline-info">
+              Back
+            </a>
           </div>
         </div>
         <div // Heart icon container
           onClick={toggleLike}
           style={{
-            position: "absolute",
+            position: 'absolute',
             bottom: 0,
             right: 0,
-            color: isLiked ? "red" : "grey",
+            color: isLiked ? 'red' : 'grey',
             fontSize: 30,
-            cursor: "pointer",
+            cursor: 'pointer',
+            marginTop: 10,
             marginRight: 10,
             marginBottom: 10,
           }}
