@@ -47,7 +47,7 @@ const UserProfile = () => {
               item.name,
               item.brand,
               item.colour,
-              item.type_id, // Assuming you have a method to get type based on type_id
+              item.type,
               item.description,
               item.image_path
             )
@@ -62,14 +62,15 @@ const UserProfile = () => {
     <section>
       <Nav />
       <div className="container">
-        <p style={{ fontSize: "28px" }}>name: {localStorage.getItem("name")}</p>
-        <p style={{ fontSize: "28px" }}>
-          email: {localStorage.getItem("email")}
+        <br></br>
+        <p style={{ fontSize: '20px'}}>
+          Name: {localStorage.getItem('name')}<br></br>
+          Email: {localStorage.getItem('email')}
         </p>
-        <div className="row" style={{ marginTop: "40px" }}>
+        <div className="row" style={{ marginTop: '40px' }}>
           <h2>Saved Items</h2>
           {savedItems.length === 0 ? (
-            <p className="text-center mt-3">You have no saved items yet!</p>
+            <p className=" mt-3">You have no saved items yet!</p>
           ) : (
             savedItems.map((item) => (
               <div key={item.id} className="col-md-4 mb-3">
