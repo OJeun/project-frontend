@@ -4,10 +4,12 @@ import Item from "../models/Item";
 import Nav from "../components/nav";
 import axiosInstance from "../components/axiosInstance";
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 console.log(localStorage.getItem("token"));
 
 const ItemDetail = () => {
+  const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
   console.log(id);
@@ -29,7 +31,7 @@ const ItemDetail = () => {
       toast.error("Login needed. Redirecting to login page...");
 
       setTimeout(() => {
-        location.href = "/loginAndRegister";
+        navigate('/loginAndRegister');
       }, 3000);
       return;
     }
@@ -144,9 +146,12 @@ const ItemDetail = () => {
             <p>
               <strong>Description</strong>: {item.description}
             </p>
-            <a href="/profile" className="btn btn-outline-info">
+            <button
+              className="btn btn-outline-info"
+              onClick={() => navigate(-1)}
+            >
               Back
-            </a>
+            </button>
           </div>
         </div>
         <div // Heart icon container
