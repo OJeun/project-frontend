@@ -52,7 +52,7 @@ const Login = () => {
               required
             ></input>
           </div>
-          <div className="mb-3">
+          <div className="mb-4">
             <label htmlFor="password" className="form-label">
               Password
             </label>
@@ -67,9 +67,11 @@ const Login = () => {
               required
             ></input>
           </div>
-          <button onClick={handleLogin} className="btn btn-primary">
-            Submit
-          </button>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <button onClick={handleLogin} className="btn btn-primary">
+              Submit
+            </button>
+          </div>
         </div>
       </form>
     </section>

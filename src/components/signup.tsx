@@ -41,7 +41,7 @@ const SignUpPage = () => {
     <section>
       <div
         className="p-3 m-5 justify-content-center"
-        style={{ minHeight: "25rem" }}
+        style={{ minHeight: '25rem' }}
       >
         <h1 className="text-center mb-5">Create a New Account</h1>
         <div className="mb-3">
@@ -66,7 +66,7 @@ const SignUpPage = () => {
           <input
             type="email"
             name="email"
-            className={`form-control ${!isEmailValid && "is-invalid"}`}
+            className={`form-control ${!isEmailValid && 'is-invalid'}`}
             id="email"
             placeholder="jane@doe.ca"
             value={email}
@@ -98,14 +98,14 @@ const SignUpPage = () => {
             required
           />
         </div>
-        <div className="mb-3">
+        <div className="mb-4">
           <label htmlFor="confirm_password" className="form-label">
             Confirm Password
           </label>
           <input
             type="password"
             name="password_confirmation"
-            className={`form-control ${!passwordsMatch && "is-invalid"}`}
+            className={`form-control ${!passwordsMatch && 'is-invalid'}`}
             id="confirm_password"
             placeholder="******"
             onChange={(e) => {
@@ -119,9 +119,11 @@ const SignUpPage = () => {
             <div className="invalid-feedback">Passwords do not match</div>
           )}
         </div>
-        <button onClick={handleRegister} className="btn btn-primary">
-          Submit
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <button onClick={handleRegister} className="btn btn-primary">
+            Submit
+          </button>
+        </div>
       </div>
     </section>
   );

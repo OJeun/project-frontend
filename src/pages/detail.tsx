@@ -4,10 +4,12 @@ import Item from "../models/Item";
 import Nav from "../components/nav";
 import axiosInstance from "../components/axiosInstance";
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 console.log(localStorage.getItem("token"));
 
 const ItemDetail = () => {
+  const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
   console.log(id);
@@ -29,7 +31,7 @@ const ItemDetail = () => {
       toast.error("Login needed. Redirecting to login page...");
 
       setTimeout(() => {
-        location.href = "/loginAndRegister";
+        navigate('/loginAndRegister');
       }, 3000);
       return;
     }
@@ -131,22 +133,37 @@ const ItemDetail = () => {
             <img src={item.imagePath} className="img-fluid" />
           </div>
           <div className="col-md-6">
-            <h2>{item.name}</h2>
-            <p>Brand: {item.brand}</p>
-            <p>Type: {item.type}</p>
-            <p>Colour: {item.colour}</p>
-            <p>Description: {item.description}</p>
+            <h2 style={{ marginBottom: '15px' }}>{item.name}</h2>
+            <p>
+              <strong>Brand</strong>: {item.brand}
+            </p>
+            <p>
+              <strong>Type</strong>: {item.type}
+            </p>
+            <p>
+              <strong>Colour</strong>: {item.colour}
+            </p>
+            <p>
+              <strong>Description</strong>: {item.description}
+            </p>
+            <button
+              className="btn btn-outline-info"
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </button>
           </div>
         </div>
         <div // Heart icon container
           onClick={toggleLike}
           style={{
-            position: "absolute",
+            position: 'absolute',
             bottom: 0,
             right: 0,
-            color: isLiked ? "red" : "grey",
+            color: isLiked ? 'red' : 'grey',
             fontSize: 30,
-            cursor: "pointer",
+            cursor: 'pointer',
+            marginTop: 10,
             marginRight: 10,
             marginBottom: 10,
           }}
