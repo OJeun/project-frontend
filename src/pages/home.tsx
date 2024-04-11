@@ -95,6 +95,14 @@ const Home = () => {
   };
 
   const handleGenerate = async () => {
+    if (!localStorage.getItem('token')) {
+      toast.warning('Login needed. Redirecting to login page...');
+
+      setTimeout(() => {
+        location.href = '/loginAndRegister';
+      }, 3000); // Wait for 3 seconds before redirecting
+      return;
+    }
     // do not delete!!!
 
     if (!imageBase64) {
