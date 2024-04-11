@@ -3,7 +3,11 @@ import Nav from "../components/nav";
 import axios from "axios";
 import ItemCard from "../components/ItemCard";
 import Item from "../models/Item";
+<<<<<<< HEAD
 import { toast } from "react-toastify";
+=======
+import { toast } from 'react-toastify';
+>>>>>>> d8cf366d894b99f8265c1db6de045f6302e069af
 
 const UserProfile = () => {
   const [savedItems, setSavedItems] = useState<Item[]>([]);
@@ -18,6 +22,14 @@ const UserProfile = () => {
   const fetchSavedItems = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        toast.warning('Login needed. Redirecting to login page...');
+
+        setTimeout(() => {
+          location.href = '/loginAndRegister';
+        }, 3000); 
+        return;
+      }
       const response = await axios.get(
         apiUrl + "/api/users/" + localStorage.getItem("userId") + "/favorites",
         {

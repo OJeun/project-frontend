@@ -24,6 +24,15 @@ const ItemDetail = () => {
   }, [id]); // Call the effect whenever the id changes
 
   const fetchItemDetails = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.warning('Login needed. Redirecting to login page...');
+
+      setTimeout(() => {
+        location.href = '/loginAndRegister';
+      }, 3000);
+      return;
+    }
     const response = await axiosInstance.get(apiUrl + `/api/clothing/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
