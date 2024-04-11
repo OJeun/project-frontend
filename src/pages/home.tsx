@@ -7,9 +7,9 @@ import RecommendationData from "../models/Recommendation";
 import { Modal, Button } from "react-bootstrap";
 import Item from "../models/Item";
 // import "animate.css";
+import { toast } from "react-toastify";
 
 const Home = () => {
-  console.log(localStorage.getItem("token"));
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +23,7 @@ const Home = () => {
     useState<RecommendationData | null>(null); // State to hold recommendation response
 
   useEffect(() => {
+    console.log(localStorage.getItem("token"));
     fetchClothTypes();
     // test();
   }, []); // empty dependency array ensures fetchClothTypes is only called once
@@ -52,7 +53,7 @@ const Home = () => {
   //       "Top",
   //       "Light blue hoodie with front pocket and drawstrings, featuring the Jordan logo on the chest.",
   //       "clothing_images/tops/light_blue_hoodie.png"
-  //     ), // 修复这里的分号为逗号
+  //     ),
   //   });
   //   setIsLoading(false); // Set loading state to false (response received)
   // };
@@ -93,14 +94,13 @@ const Home = () => {
   };
 
   const handleGenerate = async () => {
-    setShowModal(true);
     // do not delete!!!
-    try {
-      if (!imageBase64) {
-        console.log("Please upload an image first.");
-        return;
-      }
 
+    if (!imageBase64) {
+      toast.warning("Please upload an image first.");
+      return;
+    } else {
+      setShowModal(true);
       const axiosInstance = axios.create({
         timeout: 20000, // Set timeout to 10 seconds (10000 milliseconds)
         headers: {
@@ -117,48 +117,39 @@ const Home = () => {
         }
       );
 
-      try {
-        const itemData = await axios.get(
-          apiUrl + `/api/clothing/${response.data.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        ); // Add closing parenthesis here
-
-        console.log("Item data:", itemData.data);
-
-        if (itemData.status !== 200) {
-          console.log("Error fetching clothing detail:", itemData);
-          return;
-        }
-
-        setRecommendationData({
-          description: response.data.description,
-          id: response.data.id,
-          item: new Item(
-            itemData.data.id,
-            itemData.data.name,
-            itemData.data.brand,
-            itemData.data.colour,
-            itemData.data.type,
-            itemData.data.description,
-            itemData.data.image_path
-          ), // 修复这里的分号为逗号
-        });
-        setIsLoading(false); // Set loading state to false (response received)
-
-        console.log("Recommendation response:", response.data);
-      } catch (error) {
-        console.error("Error fetching clothing detail:", error);
+      if (response.status !== 200) {
+        toast.error(`${response.data.error}: ${response.data.message}`);
+        return;
       }
 
-      // Further logic based on recommendation response
-    } catch (error) {
-      console.log(error);
-      // location.href =
-      //   "/?message= Error generating recommendation: " + error + "&error=true";
+      const itemData = await axios.get(
+        apiUrl + `/api/clothing/${response.data.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      ); // Add closing parenthesis here
+
+      if (itemData.status !== 200) {
+        toast.error("Error fetching clothing detail:", itemData.data.error);
+        return;
+      }
+
+      setRecommendationData({
+        description: response.data.description,
+        id: response.data.id,
+        item: new Item(
+          itemData.data.id,
+          itemData.data.name,
+          itemData.data.brand,
+          itemData.data.colour,
+          itemData.data.type,
+          itemData.data.description,
+          itemData.data.image_path
+        ), // 修复这里的分号为逗号
+      });
+      setIsLoading(false); // Set loading state to false (response received)
     }
   };
 
