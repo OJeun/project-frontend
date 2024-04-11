@@ -61,14 +61,28 @@ const Home = () => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    const reader = new FileReader();
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-    reader.onload = () => {
-      const base64 = reader.result;
-      setImageBase64(base64 as string);
-    };
+    if (!localStorage.getItem('token')) {
+      toast.error('Login needed. Redirecting to login page...');
+      setTimeout(() => {
+        location.href = '/loginAndRegister';
+      }, 3000); // Wait for 3 seconds before redirecting
+      return;
+    }
 
-    reader.readAsDataURL(file);
+    if (file && validImageTypes.includes(file.type)) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64 = reader.result;
+        setImageBase64(base64 as string);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      toast.warning('Invalid file type. Please upload a JPEG(JPG) or PNG image.');
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -95,7 +109,7 @@ const Home = () => {
 
   const handleGenerate = async () => {
     if (!localStorage.getItem('token')) {
-      toast.warning('Login needed. Redirecting to login page...');
+      toast.error('Login needed. Redirecting to login page...');
 
       setTimeout(() => {
         location.href = '/loginAndRegister';
