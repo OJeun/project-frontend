@@ -26,7 +26,7 @@ const ItemDetail = () => {
   const fetchItemDetails = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.warning("Login needed. Redirecting to login page...");
+      toast.error("Login needed. Redirecting to login page...");
 
       setTimeout(() => {
         location.href = "/loginAndRegister";

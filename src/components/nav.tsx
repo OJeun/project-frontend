@@ -31,7 +31,7 @@ const Nav = () => {
       >
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            Navbar
+            AIStylist
           </a>
           <button
             className="navbar-toggler"
