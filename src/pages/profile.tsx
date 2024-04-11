@@ -3,11 +3,7 @@ import Nav from "../components/nav";
 import axios from "axios";
 import ItemCard from "../components/ItemCard";
 import Item from "../models/Item";
-<<<<<<< HEAD
 import { toast } from "react-toastify";
-=======
-import { toast } from 'react-toastify';
->>>>>>> d8cf366d894b99f8265c1db6de045f6302e069af
 
 const UserProfile = () => {
   const [savedItems, setSavedItems] = useState<Item[]>([]);
