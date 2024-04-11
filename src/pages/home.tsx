@@ -9,6 +9,8 @@ import Item from "../models/Item";
 // import "animate.css";
 import { toast } from "react-toastify";
 
+console.log(localStorage.getItem("token"));
+
 const Home = () => {
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -23,21 +25,20 @@ const Home = () => {
     useState<RecommendationData | null>(null); // State to hold recommendation response
 
   useEffect(() => {
-    console.log(localStorage.getItem("token"));
     fetchClothTypes();
     // test();
   }, []); // empty dependency array ensures fetchClothTypes is only called once
 
   const fetchClothTypes = async () => {
-    try {
-      const response = await axios.get(apiUrl + "/api/types");
-      if (Array.isArray(response.data)) {
-        setClothTypes(response.data);
-        setSelectedType(response.data[0].id.toString());
-      }
-    } catch (error) {
-      location.href =
-        "/?message= Error fetching cloth types: " + error + "&error=true";
+    const response = await axios.get(apiUrl + "/api/types");
+    if (Array.isArray(response.data)) {
+      setClothTypes(response.data);
+      setSelectedType(response.data[0].id.toString());
+    }
+
+    if (response.status !== 200) {
+      toast.error(`${response.data.error}: ${response.data.message}`);
+      return;
     }
   };
 
@@ -194,7 +195,7 @@ const Home = () => {
           <div className="container">
             <div className="d-flex justify-content-between mb-5">
               <div>
-                <text
+                <span
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -202,7 +203,7 @@ const Home = () => {
                   }}
                 >
                   Select your type:
-                </text>
+                </span>
                 <select
                   className="btn btn-secondary dropdown-toggle"
                   aria-label="Select cloth type"

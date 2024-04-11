@@ -3,6 +3,7 @@ import { BsFillHeartFill } from "react-icons/bs";
 import Item from "../models/Item";
 import Nav from "../components/nav";
 import axiosInstance from "../components/axiosInstance";
+import { toast } from "react-toastify";
 
 console.log(localStorage.getItem("token"));
 
@@ -23,30 +24,30 @@ const ItemDetail = () => {
   }, [id]); // Call the effect whenever the id changes
 
   const fetchItemDetails = async () => {
-    try {
-      const response = await axiosInstance.get(apiUrl + `/api/clothing/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+    const response = await axiosInstance.get(apiUrl + `/api/clothing/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-      setItem(
-        new Item(
-          response.data.id,
-          response.data.name,
-          response.data.brand,
-          response.data.colour,
-          response.data.type,
-          response.data.description,
-          response.data.image_path,
-          response.data.isFavorite
-        )
-      );
-      setIsLiked(response.data.isFavorite);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching item details:", error);
+    if (response.status !== 200) {
+      toast.error(`${response.data.error}: ${response.data.message}`);
+      return;
     }
+
+    setItem(
+      new Item(
+        response.data.id,
+        response.data.name,
+        response.data.brand,
+        response.data.colour,
+        response.data.type,
+        response.data.description,
+        response.data.image_path,
+        response.data.isFavorite
+      )
+    );
+    setIsLiked(response.data.isFavorite);
   };
 
   const toggleLike = async () => {
@@ -59,7 +60,10 @@ const ItemDetail = () => {
           },
         }
       );
-      console.log(response.data);
+      if (response.status !== 200) {
+        toast.error(`${response.data.error}: ${response.data.message}`);
+        return;
+      }
     } else {
       const response = await axiosInstance.post(
         apiUrl + `/api/users/${localStorage.getItem("userId")}/favorites/${id}`,
@@ -69,13 +73,30 @@ const ItemDetail = () => {
           },
         }
       );
-      console.log(response.data);
     }
     setIsLiked(!isLiked);
   };
 
   if (!item) {
-    return <div>Loading...</div>; // Placeholder while item details are being fetched
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <div
+          className="spinner-border text-primary text-center"
+          role="status"
+          style={{
+            width: "8rem",
+            height: "8rem",
+          }}
+        ></div>
+      </div>
+    ); // Placeholder while item details are being fetched
   }
 
   return (
